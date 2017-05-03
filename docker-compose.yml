@@ -1,0 +1,19 @@
+version: '2'
+services:
+  snfilterweb:
+    image: snfilterweb
+    build: .
+    container_name: snfilterweb
+    ports:
+      - "6543:6543"
+    volumes:
+      - /home/stephan/Projects/snfilterweb:/opt/snfilterweb:Z
+    environment:
+      - VIRTUAL_HOST=lnm.vortexok.net
+    links:
+      - redis
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379
