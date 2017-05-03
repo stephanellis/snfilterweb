@@ -14,7 +14,8 @@ requires = [
     'pyramid_debugtoolbar',
     'waitress',
     'redis',
-    'snfilter'
+    'snfilter',
+    'requests'
     ]
 
 tests_require = [

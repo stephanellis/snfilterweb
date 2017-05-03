@@ -2,7 +2,10 @@ from pyramid.config import Configurator
 import redis
 
 def redisconnection(request):
-    return redis.Redis(request.registry.settings["redis.server"])
+    host = request.registry.settings["redis.host"]
+    port = request.registry.settings["redis.port"]
+    db = request.registry.settings["redis.db"]
+    return redis.Redis(host=host, port=port, db=db)
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
