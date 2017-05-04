@@ -3,13 +3,15 @@
 {% block contentarea %}
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-4">
     <h2>Edit feed - {{ feedname }}</h2>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-6">
+    <p>
+      Enter the names, to include in your feed.  These are names in the text
+      field, which is what is displayed on the map in GR Level 3 when viewing
+      the full feed from spotter network.  If you want to change the text you
+      see on the map, enter a colon (:) and the text you want to replace the
+      name with.
+    </p>
     <form method="post" action="{{ request.route_url('addname', id=id) }}" class="form-inline">
       <div class="form-group">
         <label for="name" class="sr-only">Name</label>
@@ -19,15 +21,21 @@
     </form>
     <ul>
       {% for m in members %}
-      <li>{{ m.decode("utf-8") }}</li>
+        <form method="post" action="{{ request.route_url('delname', id=id) }}" class="form-inline">
+          <div class="form-group">
+            <li><button class="btn btn-danger">X</button> {{ m.decode("utf-8") }}</li>
+            <input type="hidden" name="name" id="name" value="{{ m.decode('utf-8') }}">
+          </div>
+        </form>
       {% endfor %}
     </ul>
+    <p>{{ nameslist }}</p>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-8">
     <h3>Sample Output</h3>
-    <pre>
-      GR Feed output here
-    </pre>
+    <pre><code>
+{{ output }}
+    </code></pre>
   </div>
 </div>
 
