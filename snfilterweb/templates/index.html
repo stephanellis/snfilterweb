@@ -23,8 +23,20 @@
 </div>
 
 <div class="row">
-  <divl class="col-md-12">
+  <div class="col-md-12">
     <p>If you're ok with this, then go ahead and make a feed!</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form method="post" action="{{ request.route_url('createfeed') }}" class="form-inline">
+      <div class="form-group">
+        <label class="sr-only" for="feedname">Feed Name</label>
+        <input type="text" class="form-control" name="feedname" id="feedname" placeholder="LIRA Spotters Only">
+      </div>
+      <button type="submit" class="btn btn-primary">Create Feed</button>
+    </form>
   </div>
 </div>
 

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block contentarea %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Edit feed - {{ feedname }}</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <form method="post" action="{{ request.route_url('addname', id=id) }}" class="form-inline">
+      <div class="form-group">
+        <label for="name" class="sr-only">Name</label>
+        <input type="text" name="name" id="name" placeholder="name[:translation]" class="form-control">
+      </div>
+      <button class="btn btn-primary" type="submit">Add Name</button>
+    </form>
+    <ul>
+      {% for m in members %}
+      <li>{{ m.decode("utf-8") }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <h3>Sample Output</h3>
+    <pre>
+      GR Feed output here
+    </pre>
+  </div>
+</div>
+
+{% endblock %}
