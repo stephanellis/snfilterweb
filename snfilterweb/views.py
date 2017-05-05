@@ -17,11 +17,23 @@ def createfeed(request):
     feedname = request.params.get("feedname", "")
     if feedname is not "":
         id = str(uuid4())
+        viewid = str(uuid4())
         request.redis.set(id + ":name", feedname)
+        request.redis.set(id +":view", viewid)
+        request.redis.set(viewid + ":feed", id)
         return HTTPFound(request.route_url('editfeed', id=id))
     else:
         return HTTPFound(request.route_url("index"))
 
+@view_config(route_name="feed", renderer="string")
+def feed(request):
+    viewid = request.matchdict['viewid']
+    id = request.redis.get(viewid + ":feed")
+    if id is None:
+        return HTTPFound(request.route_url('index'))
+    else:
+        id = id.decode('utf-8')
+    return "Test"
 
 class FeedEditor(object):
     def __init__(self, request):
@@ -29,8 +41,14 @@ class FeedEditor(object):
         self.id = self.request.matchdict['id']
         self.redis = request.redis
         self.feedname = self.redis.get(self.id + ":name")
-        if self.feedname is None:
+        self.viewid = self.redis.get(self.id + ":view")
+
+        if self.feedname is None or self.viewid is None:
             return HTTPFound(request.route_url('index'))
+        else:
+            self.feedname = self.feedname.decode('utf-8')
+            self.viewid = self.viewid.decode('utf-8')
+
         self.members = self.redis.sscan_iter(self.id + ":names")
         self.nameslist = ",".join([ x.decode('utf-8') for x in self.redis.sscan_iter(self.id + ":names") ])
 
@@ -49,11 +67,18 @@ class FeedEditor(object):
         rawfeed = self.get_feed()
         names, xlator = parse_nameslist(self.nameslist)
         ff = filter_feed(rawfeed, names, translator=xlator)
-        return output_gr(ff)
+        return output_gr(ff, filtername=self.feedname)
 
     @view_config(route_name="editfeed", renderer="editfeed.html")
     def editfeed(self):
-        return dict(feedname=self.feedname.decode("utf-8"), id=self.id, members=self.members, output=self.filter_feed(), nameslist=self.nameslist)
+        return dict(
+            feedname=self.feedname,
+            id=self.id,
+            members=self.members,
+            output=self.filter_feed(),
+            nameslist=self.nameslist,
+            viewid=self.viewid
+            )
 
     @view_config(route_name="addname")
     def addname(self):

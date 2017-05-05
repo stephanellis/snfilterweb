@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 
+{% block editorlinks %}
+<li><a href="{{ request.route_url('feed', viewid=viewid) }}" target="_blank">GR Level 3</a></li>
+<li><a href="{{ request.route_url('feed', viewid=viewid) }}" target="_blank">TruVu</a></li>
+<li><a href="{{ request.route_url('feed', viewid=viewid) }}" target="_blank">JSON</a></li>
+{% endblock %}
+
 {% block contentarea %}
 
 <div class="row">
   <div class="col-md-4">
-    <h2>Edit feed - {{ feedname }}</h2>
+    <h3>Edit feed - {{ feedname }}</h3>
     <p>
       Enter the names, to include in your feed.  These are names in the text
       field, which is what is displayed on the map in GR Level 3 when viewing
@@ -19,17 +25,19 @@
       </div>
       <button class="btn btn-primary" type="submit">Add Name</button>
     </form>
-    <ul>
-      {% for m in members %}
-        <form method="post" action="{{ request.route_url('delname', id=id) }}" class="form-inline">
-          <div class="form-group">
-            <li><button class="btn btn-danger">X</button> {{ m.decode("utf-8") }}</li>
-            <input type="hidden" name="name" id="name" value="{{ m.decode('utf-8') }}">
-          </div>
-        </form>
-      {% endfor %}
-    </ul>
-    <p>{{ nameslist }}</p>
+    {% for m in members %}
+      <form method="post" action="{{ request.route_url('delname', id=id) }}" class="form-inline">
+        <div class="form-group">
+          <button class="btn btn-xs btn-danger">X</button> {{ m.decode("utf-8") }}
+          <input type="hidden" name="name" id="name" value="{{ m.decode('utf-8') }}">
+        </div>
+      </form>
+    {% endfor %}
+    <hr>
+    <p>You can paste the following string as the nameslist argument to the
+      snfilter-cli tool.</p>
+    </thead>
+    <pre><code>{{ nameslist }}</code></pre>
   </div>
   <div class="col-md-8">
     <h3>Sample Output</h3>

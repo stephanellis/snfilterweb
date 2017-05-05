@@ -20,5 +20,6 @@ def main(global_config, **settings):
     config.add_route('editfeed', '/editfeed/{id}')
     config.add_route('addname', '/addname/{id}')
     config.add_route('delname', '/delname/{id}')
+    config.add_route('feed', '/feed/{viewid}')
     config.scan()
     return config.make_wsgi_app()
