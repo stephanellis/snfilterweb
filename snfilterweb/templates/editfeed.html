@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block editorlinks %}
-<li><a href="{{ request.route_url('feed', viewid=viewid) }}" target="_blank">GR Level 3</a></li>
-<li><a href="{{ request.route_url('feed', viewid=viewid) }}" target="_blank">TruVu</a></li>
-<li><a href="{{ request.route_url('feed', viewid=viewid) }}" target="_blank">JSON</a></li>
+<li><a href="{{ request.route_url('origfeed') }}" target="_blank">Original Feed</a></li>
+<li><a href="{{ request.route_url('feed', viewid=viewid, feedformat='gr') }}" target="_blank">GR Level 3</a></li>
+<li><a href="{{ request.route_url('feed', viewid=viewid, feedformat='truvu') }}">TruVu</a></li>
+<li><a href="{{ request.route_url('feed', viewid=viewid, feedformat='json') }}" target="_blank">JSON</a></li>
 {% endblock %}
 
 {% block contentarea %}

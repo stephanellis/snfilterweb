@@ -1,11 +1,11 @@
 from pyramid.view import view_config
 from uuid import uuid4
 
-import requests
+import json
 
 from pyramid.httpexceptions import HTTPFound
 
-from snfilter import parse_nameslist, filter_feed, output_gr
+from snfilter import parse_nameslist, filter_feed, output_gr, output_truvu
 
 @view_config(route_name='index', renderer='index.html')
 def index(request):
@@ -25,15 +25,35 @@ def createfeed(request):
     else:
         return HTTPFound(request.route_url("index"))
 
+@view_config(route_name="origfeed", renderer="string")
+def origfeed(request):
+    return request.rawfeed
+
 @view_config(route_name="feed", renderer="string")
 def feed(request):
     viewid = request.matchdict['viewid']
+    feedformat = request.matchdict['feedformat']
     id = request.redis.get(viewid + ":feed")
     if id is None:
         return HTTPFound(request.route_url('index'))
     else:
         id = id.decode('utf-8')
-    return "Test"
+    ff = get_filtered_feed(id, request)
+    if feedformat == "gr":
+        name = request.redis.get(id + ":name").decode('utf-8')
+        return output_gr(ff, filtername=name)
+    if feedformat == "json":
+        return json.dumps(ff, indent=2)
+    if feedformat == "truvu":
+        name = request.redis.get(id + ":name").decode('utf-8')
+        request.response.headers["Content-Disposition"] = "attachment; filename=\"%s.csv\"" % name
+        return output_truvu(ff)
+
+def get_filtered_feed(id, request):
+    o = dict()
+    nameslist = ",".join([ x.decode('utf-8') for x in request.redis.sscan_iter(id + ":names") ])
+    names, xlator = parse_nameslist(nameslist)
+    return filter_feed(request.rawfeed, names, translator=xlator)
 
 class FeedEditor(object):
     def __init__(self, request):
@@ -52,22 +72,8 @@ class FeedEditor(object):
         self.members = self.redis.sscan_iter(self.id + ":names")
         self.nameslist = ",".join([ x.decode('utf-8') for x in self.redis.sscan_iter(self.id + ":names") ])
 
-    def get_feed(self):
-        rawfeed = self.redis.get("rawfeed")
-        if rawfeed is None:
-            r = requests.get(self.request.registry.settings["spotternetwork.feed"])
-            if r.ok:
-                self.redis.setex("rawfeed", r.text, 60)
-                rawfeed = r.text
-        else:
-            rawfeed = rawfeed.decode('utf-8')
-        return rawfeed
-
-    def filter_feed(self):
-        rawfeed = self.get_feed()
-        names, xlator = parse_nameslist(self.nameslist)
-        ff = filter_feed(rawfeed, names, translator=xlator)
-        return output_gr(ff, filtername=self.feedname)
+    def filter_feed_gr(self):
+        return output_gr(get_filtered_feed(self.id, self.request), filtername=self.feedname)
 
     @view_config(route_name="editfeed", renderer="editfeed.html")
     def editfeed(self):
@@ -75,7 +81,7 @@ class FeedEditor(object):
             feedname=self.feedname,
             id=self.id,
             members=self.members,
-            output=self.filter_feed(),
+            output=self.filter_feed_gr(),
             nameslist=self.nameslist,
             viewid=self.viewid
             )
