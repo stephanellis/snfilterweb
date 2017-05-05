@@ -38,7 +38,7 @@
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                   {% block editorlinks %}{% endblock %}
-                  <li><a href="#">~ {{ request.snfstats.totalhits }} feed hits</a></li>
+                  <li><a href="{{ request.route_url('index') }}">~ {{ request.snfstats.totalhits }} feed hits</a></li>
                 </ul>
               </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
