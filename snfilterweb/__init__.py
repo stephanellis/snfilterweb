@@ -14,10 +14,29 @@ def get_feed(request):
         r = requests.get(request.registry.settings["spotternetwork.feed"])
         if r.ok:
             request.redis.setex("rawfeed", r.text, 60)
+            request.redis.incr("snfeedhits")
             rawfeed = r.text
     else:
         rawfeed = rawfeed.decode('utf-8')
     return rawfeed
+
+def snfstats(request):
+    snfeedhits = request.redis.get("snfeedhits")
+    if snfeedhits is not None:
+        snfeedhits = int(snfeedhits)
+    else:
+        snfeedhits = 0
+    totalhits = request.redis.get("totalhits")
+    if totalhits is not None:
+        totalhits = int(totalhits)
+    else:
+        totalhits = 0
+    orighits = request.redis.get("orighits")
+    if orighits is not None:
+        orighits = int(orighits)
+    else:
+        orighits = 0
+    return dict(snfeedhits=snfeedhits, totalhits=totalhits, orighits=orighits)
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -28,6 +47,7 @@ def main(global_config, **settings):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_request_method(redisconnection, "redis", reify=True)
     config.add_request_method(get_feed, "rawfeed", reify=True)
+    config.add_request_method(snfstats, "snfstats", reify=True)
     config.add_route('index', '/')
     config.add_route('createfeed', '/createfeed')
     config.add_route('editfeed', '/editfeed/{id}')

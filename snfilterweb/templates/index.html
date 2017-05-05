@@ -7,18 +7,28 @@
     <h2>Work flow</h2>
     <ul>
       <li>You create a new filter</li>
-      <li>We pull the spotter network gibson ridge full positions feed periodically</li>
-      <li>You pull the filtered feed you created in your GR Level 3 installation</li>
+      <li>You add names to your filter</li>
+      <li>You copy/paste the filtered feed output link into your placefile manager in GR Level 3</li>
+      <li>We pull the spotter network gibson ridge full positions feed periodically (default 1 min)</li>
+      <li>You pull the filtered feed and we take care of the rest</li>
   </div>
   <div class="col-md-4">
-    <h2>Is this reliable?</h2>
-    <p>No, I don't promise this will always work. Maybe someday...</p>
+    <h2>Notes</h2>
+    <p>Don't rely on this for life and death situations</p>
+    <p>This is a web interface built to make <a href="https://github.com/stephanellis/snfilter" target="_blank">this</a> easier to use.</p>
+    <p>It's built using <a href="http:///www.python.org" target="_blank">python</a>,
+      <a href="http://trypyramid.com" target="_blank">pyramid</a>,
+      requests
+      and <a href="http://redis.io" target="_blank">redis</a>.
+    </p>
+    <p>Hopefully noone at spotter network will find this anoying, although they shouldn't because it should reduce load on their application.</p>
   </div>
   <div class="col-md-4">
-    <h2>Can anyone see or edit my filtered feed?</h2>
+    <h2>Stats</h2>
     <ul>
-      <li>You can share your filtered feed with anyone</li>
-      <li>Only those with the link to your feed editor page can change the feed</li>
+      <li>{{ request.snfstats.snfeedhits }} hits against the full feed from spotter network</li>
+      <li>{{ request.snfstats.orighits }} hits for our cached original feed</li>
+      <li>{{ request.snfstats.totalhits }} filtered feed hits</li>
   </div>
 </div>
 

@@ -27,6 +27,8 @@ def createfeed(request):
 
 @view_config(route_name="origfeed", renderer="string")
 def origfeed(request):
+    request.redis.incr("totalhits")
+    request.redis.incr("orighits")
     return request.rawfeed
 
 @view_config(route_name="feed", renderer="string")
@@ -39,6 +41,8 @@ def feed(request):
     else:
         id = id.decode('utf-8')
     ff = get_filtered_feed(id, request)
+    request.redis.incr(id + ":hits")
+    request.redis.incr("totalhits")
     if feedformat == "gr":
         name = request.redis.get(id + ":name").decode('utf-8')
         return output_gr(ff, filtername=name)
