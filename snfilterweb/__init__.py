@@ -36,7 +36,8 @@ def snfstats(request):
         orighits = int(orighits)
     else:
         orighits = 0
-    return dict(snfeedhits=snfeedhits, totalhits=totalhits, orighits=orighits)
+    totalfeeds = len(request.redis.keys("*:name"))
+    return dict(snfeedhits=snfeedhits, totalhits=totalhits, orighits=orighits, totalfeeds=totalfeeds)
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
