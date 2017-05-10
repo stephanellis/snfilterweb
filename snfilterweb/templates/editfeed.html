@@ -20,14 +20,16 @@
       <button class="btn btn-primary" type="submit">Add Name</button>
     </form>
     <br>
-    {% for m in members %}
-      <form method="post" action="{{ request.route_url('delname', id=id) }}" class="form-inline">
-        <div class="form-group">
-          <button class="btn btn-xs btn-danger">X</button> {{ m.decode("utf-8") }}
-          <input type="hidden" name="name" id="name" value="{{ m.decode('utf-8') }}">
-        </div>
-      </form>
-    {% endfor %}
+    <ul class="list-group">
+      {% for m in members %}
+      <li class="list-group-item">
+        <form method="post" action="{{ request.route_url('delname', id=id) }}">
+            <button class="btn btn-xs btn-danger pull-right">X</button> {{ m.decode("utf-8") }}
+            <input type="hidden" name="name" id="name" value="{{ m.decode('utf-8') }}">
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
     <hr/>
     <ul>
       <li>Enter names to include in your feed. These are names in the text
