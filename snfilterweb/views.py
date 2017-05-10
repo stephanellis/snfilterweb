@@ -37,6 +37,7 @@ def origfeed(request):
 
 @view_config(route_name="feed", renderer="string")
 def feed(request):
+
     viewid = request.matchdict['viewid']
     feedformat = request.matchdict['feedformat']
     id = request.redis.get(viewid + ":feed")
@@ -44,6 +45,14 @@ def feed(request):
         return HTTPFound(request.route_url('index'))
     else:
         id = id.decode('utf-8')
+    ip = None
+    if 'HTTP_X_FORWARDED_FOR' in request.environ:
+        ip = request.environ['HTTP_X_FORWARDED_FOR']
+    else:
+        if 'REMOTE_ADDR' in request.environ:
+            ip = request.environ['REMOTE_ADDR']
+    if ip is not None:
+        request.redis.incr("ip:" + str(ip))
     ff = get_filtered_feed(id, request)
     request.redis.incr(id + ":hits")
     request.redis.incr("totalhits")
