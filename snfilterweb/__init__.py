@@ -56,5 +56,6 @@ def main(global_config, **settings):
     config.add_route('delname', '/delname/{id}')
     config.add_route('feed', '/feed/{viewid}/{feedformat}')
     config.add_route('origfeed', '/origfeed')
+    config.add_route('stats', '/stats')
     config.scan()
     return config.make_wsgi_app()

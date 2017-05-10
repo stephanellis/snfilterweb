@@ -12,6 +12,10 @@ def index(request):
     request.redis.incr("hits")
     return dict(homepage=request.redis.get("homepage"))
 
+@view_config(route_name='stats', renderer='stats.html')
+def getstats(request):
+    return dict()
+
 @view_config(route_name="createfeed")
 def createfeed(request):
     feedname = request.params.get("feedname", "")

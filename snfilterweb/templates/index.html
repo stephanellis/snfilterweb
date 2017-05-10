@@ -24,13 +24,8 @@
     </p>
     <p>Hopefully noone at spotter network will find this anoying, although they shouldn't because it should reduce load on their application.</p>
   </div>
-  <div class="col-md-4">
-    <h2>Stats</h2>
-    <ul class="list-group">
-      <li class="list-group-item"><span class="badge">{{ request.snfstats.snfeedhits }}</span>pulled from spotter network</li>
-      <li class="list-group-item"><span class="badge">{{ request.snfstats.orighits }}</span> served the spotter network original</li>
-      <li class="list-group-item"><span class="badge">{{ request.snfstats.totalfeeds}}</span>filtered feeds</li>
-      <li class="list-group-item"><span class="badge">{{ request.snfstats.totalhits }}</span> filtered feed hits</li>
+  <div class="col-md-4" id="statsdiv">
+    {% include "stats.html" %}
   </div>
 </div>
 
@@ -51,5 +46,23 @@
     </form>
   </div>
 </div>
+{% endblock %}
 
+{% block extrascripts %}
+<script>
+$(document).ready(function() {
+(function worker() {
+  $.ajax({
+    url: '{{ request.route_url("stats") }}',
+    success: function(data) {
+      $('#statsdiv').html(data);
+    },
+    complete: function() {
+      // Schedule the next request when the current one's complete
+      setTimeout(worker, 60000);
+    }
+  });
+})();
+});
+</script>
 {% endblock %}
