@@ -12,13 +12,6 @@
 <div class="row">
   <div class="col-md-4">
     <h3>Edit feed - {{ feedname }}</h3>
-    <p>
-      Enter the names, to include in your feed.  These are names in the text
-      field, which is what is displayed on the map in GR Level 3 when viewing
-      the full feed from spotter network.  If you want to change the text you
-      see on the map, enter a colon (:) and the text you want to replace the
-      name with.
-    </p>
     <form method="post" action="{{ request.route_url('addname', id=id) }}" class="form-inline">
       <div class="form-group">
         <label for="name" class="sr-only">Name</label>
@@ -26,6 +19,7 @@
       </div>
       <button class="btn btn-primary" type="submit">Add Name</button>
     </form>
+    <br>
     {% for m in members %}
       <form method="post" action="{{ request.route_url('delname', id=id) }}" class="form-inline">
         <div class="form-group">
@@ -34,6 +28,23 @@
         </div>
       </form>
     {% endfor %}
+    <hr/>
+    <ul>
+      <li>Enter names to include in your feed. These are names in the text
+      field, which is what is displayed on the map in GR Level 3 when viewing
+      the full feed from spotter network.</li>
+      <li>If you want to change the text you
+      see on the map, enter a colon (:) and the text you want to replace the
+      name with.</li>
+      <li>Tip: use the original feed link at the top of the page to view the
+      the full feed in your browser.  Use Ctrl+F (find) function of the browser
+      to search for the names you need.</li>
+      <li>Use the <button class="btn btn-xs btn-danger">X</button> to delete a
+      name from the feed.</li>
+      <li>Use the other links at the upper right to consume the filtered data.
+      Right click and select and select "copy link location" on the GR Level 3
+      link, then paste into your placefile manager in GR Level 3.</li>
+    </ul>
     <hr>
     <p>You can paste the following string as the nameslist argument to the
       snfilter-cli tool.</p>
