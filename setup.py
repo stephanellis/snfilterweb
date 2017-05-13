@@ -14,7 +14,7 @@ requires = [
     'pyramid_debugtoolbar',
     'waitress',
     'redis',
-    'snfilter',
+    'snfilter==0.3',
     'requests'
     ]
 
