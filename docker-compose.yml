@@ -8,8 +8,7 @@ services:
       - "6543:6543"
     volumes:
       - /home/stephan/Projects/snfilterweb:/opt/snfilterweb:Z
-    environment:
-      - VIRTUAL_HOST=lnm.vortexok.net
+    command: pserve --reload development.ini
     links:
       - redis
   redis:
