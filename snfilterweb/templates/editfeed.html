@@ -3,7 +3,7 @@
 {% block editorlinks %}
 <li><a href="{{ request.route_url('origfeed') }}" target="_blank">Original Feed</a></li>
 <li><a href="{{ request.route_url('feed', viewid=viewid, feedformat='gr') }}" target="_blank">GR Level 3</a></li>
-<li><a href="{{ request.route_url('feed', viewid=viewid, feedformat='truvu') }}">TruVu</a></li>
+<li><a href="{{ request.route_url('feed', viewid=viewid, feedformat='truvu') }}">TruVu Max</a></li>
 <li><a href="{{ request.route_url('feed', viewid=viewid, feedformat='json') }}" target="_blank">JSON</a></li>
 {% endblock %}
 
@@ -46,6 +46,8 @@
       <li>Use the other links at the upper right to consume the filtered data.
       Right click and select and select "copy link location" on the GR Level 3
       link, then paste into your placefile manager in GR Level 3.</li>
+      <li>If you intend to use the data for commercial purposes, you must
+      contact spotter network and get permission!</li>
     </ul>
     <hr>
     <p>You can paste the following string as the nameslist argument to the
